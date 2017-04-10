@@ -10,8 +10,11 @@ module.exports = {
 
   output: {
     filename: 'bundle.js',
-    path: path.join(__dirname, paths.dist, 'static/scripts')
+    path: path.join(__dirname, paths.app, 'static/scripts')
   },
+
+
+  watch: true,
 
   module: {
     rules: [
