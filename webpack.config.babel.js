@@ -11,5 +11,16 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.join(__dirname, paths.dist, 'static/scripts')
+  },
+
+  module: {
+    rules: [
+
+      {test: /\.js$/, use: 'babel-loader'}
+
+    ]
   }
 }
+
+
+export default paths;

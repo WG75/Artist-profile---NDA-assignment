@@ -14,17 +14,24 @@ server.start(err => {
 })
 
 
-//register the inert plugin to render our static content
-//and tell the server to respond with the jane.html
+//register the vision plugin to render our static content
+//and setup ejs as the engine views
+//tell the server to respond with the artist.ejs
 //file for any get requests for root.
-server.register(require('inert'), (err) => {
+server.register(require('vision'), (err) => {
   if(err) throw err;
 
   server.route({
     method: 'GET',
     path: '/',
     handler: (req, res) => {
-      res.file('./app/static/artists/jane.html');
+      res.view('artist.ejs');
     }
+  })
+
+  server.views({
+    engines: {ejs: require('ejs')},
+    relativeTo: __dirname,
+    path: 'app/static/'
   })
 })
