@@ -64,6 +64,9 @@ button {
   border: none;
   cursor: pointer; }
 
+span {
+  display: inline-block; }
+
 body {
   font-size: 16px;
   font-family: 'Open Sans', sans-serif;
@@ -225,3 +228,55 @@ main {
       display: flex;
       margin-bottom: 10px;
       padding: 7px 10px; }
+
+#player-container {
+  margin-top: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border-top: 1px solid green;
+  min-height: 100px;
+  display: flex;
+  justify-content: space-between; }
+  @media screen and (max-width: 720px) {
+    #player-container {
+      flex-direction: column;
+      align-items: center; } }
+  #player-container .track-info {
+    align-self: center;
+    display: flex;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    color: #9da5a9;
+    margin-right: 15px;
+    padding: 15px; }
+    #player-container .track-info .track-image {
+      width: 100px;
+      height: 100px;
+      margin-right: 10px; }
+    #player-container .track-info .track-name {
+      margin: 10px; }
+
+.player {
+  flex: 1;
+  max-width: 70%;
+  margin-right: 5%;
+  padding: 10px; }
+  @media screen and (max-width: 720px) {
+    .player {
+      width: 90%; } }
+  .player .controlls-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px; }
+    .player .controlls-container span {
+      color: #9da5a9;
+      font-weight: lighter; }
+    .player .controlls-container button {
+      background: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin: 0 10px;
+      font-size: 1.2em;
+      color: #9da5a9; }
+    .player .controlls-container #play:hover {
+      border: 1px solid #4f9105; }
