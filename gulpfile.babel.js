@@ -45,7 +45,7 @@ gulp.task('nodemon', () => {
 
 gulp.task('start', ['sass', 'browsersync'])
 
-gulp.watch(paths.app.css, ['sass'])
+gulp.watch('app/static/**/*.sass', ['sass'])
 
 gulp.watch('app/**/*.+(ejs|js)', () => {
   setTimeout(browserSync.reload, 1000)
