@@ -13,17 +13,13 @@ module.exports = {
     path: path.join(__dirname, paths.app, 'static/scripts')
   },
 
-
   watch: true,
 
   module: {
     rules: [
 
       {test: /\.js$/, use: 'babel-loader'}
-
+      
     ]
   }
 }
-
-
-export default paths;
