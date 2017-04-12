@@ -1,0 +1,23 @@
+{
+  "firework": {
+    "name": "Firework",
+    "album": "Anatomy of the bear",
+    "lenght": "1:20",
+    "url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/Fireworks.mp3",
+    "picture": "/images/firework.jpg"
+  },
+  "dawn": {
+    "name": "Dawn",
+    "album": "Awakening",
+    "lenght": "1:20",
+    "url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/+Dawn.mp3",
+    "picture": "/images/dawn.jpg"
+  },
+  "pawinpaw": {
+    "name": "Paw in Paw",
+    "album": "Anatomy of the bear",
+    "lenght": "1:20",
+    "url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/Paw+In+Paw.mp3",
+    "picture": "/images/pawinpaw.jpg"
+  }
+}
