@@ -13,7 +13,7 @@ const wavesurfer = WaveSurfer.create({
 })
 
 wavesurfer.on('ready', () => {
-  // wavesurfer.play();
+  wavesurfer.play();
 })
 
 wavesurfer.on('finish', () => {

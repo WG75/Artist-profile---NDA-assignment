@@ -1,12 +1,15 @@
-import playList from "./playlist.js"
 import waveSurfer from "../utili/wavesurfer.js"
 import songs from "../songs.json"
 
 
-
 const player = {};
 
-player.getCurrentLoadedSong = () => playList.songs[playList.currentIndex]
+player.playList = {
+  songs: ["firework", "dawn", "pawinpaw"],
+  currentIndex: 0
+}
+
+player.getCurrentLoadedSong = () => player.playList.songs[player.playList.currentIndex]
 
 player.play = () => {
 
@@ -17,9 +20,9 @@ player.play = () => {
 }
 
 player.next = () => {
-  playList.currentIndex++
-  if(playList.currentIndex == playList.songs.length) {
-    playList.currentIndex = 0;
+  player.playList.currentIndex++
+  if(player.playList.currentIndex == player.playList.songs.length) {
+    player.playList.currentIndex = 0;
   }
 
   player.play();
@@ -27,9 +30,9 @@ player.next = () => {
 }
 
 player.back = () => {
-  playList.currentIndex--
-  if(playList.currentIndex < 0) {
-    playList.currentIndex = playList.length - 1;
+  player.playList.currentIndex--
+  if(player.playList.currentIndex < 0) {
+    player.playList.currentIndex = player.playList.length - 1;
   }
 
   player.play();
@@ -37,8 +40,8 @@ player.back = () => {
 }
 
 
-player.stop = () => {
-  waveSurfer.pause()
+player.toggle = () => {
+  waveSurfer.playPause()
 }
 
 
@@ -46,10 +49,6 @@ player.extractSongObj = () => {
     let targetSong = player.getCurrentLoadedSong();
     let {[targetSong] : song} = songs;
     return song;
-}
-
-player.updateTrackInfo = () => {
-
 }
 
 

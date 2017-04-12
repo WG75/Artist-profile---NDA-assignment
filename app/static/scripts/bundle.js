@@ -77,10 +77,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _playlist = __webpack_require__(3);
-
-var _playlist2 = _interopRequireDefault(_playlist);
-
 var _wavesurfer = __webpack_require__(4);
 
 var _wavesurfer2 = _interopRequireDefault(_wavesurfer);
@@ -93,8 +89,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var player = {};
 
+player.playList = {
+  songs: ["firework", "dawn", "pawinpaw"],
+  currentIndex: 0
+};
+
 player.getCurrentLoadedSong = function () {
-  return _playlist2.default.songs[_playlist2.default.currentIndex];
+  return player.playList.songs[player.playList.currentIndex];
 };
 
 player.play = function () {
@@ -106,25 +107,25 @@ player.play = function () {
 };
 
 player.next = function () {
-  _playlist2.default.currentIndex++;
-  if (_playlist2.default.currentIndex == _playlist2.default.songs.length) {
-    _playlist2.default.currentIndex = 0;
+  player.playList.currentIndex++;
+  if (player.playList.currentIndex == player.playList.songs.length) {
+    player.playList.currentIndex = 0;
   }
 
   player.play();
 };
 
 player.back = function () {
-  _playlist2.default.currentIndex--;
-  if (_playlist2.default.currentIndex < 0) {
-    _playlist2.default.currentIndex = _playlist2.default.length - 1;
+  player.playList.currentIndex--;
+  if (player.playList.currentIndex < 0) {
+    player.playList.currentIndex = player.playList.length - 1;
   }
 
   player.play();
 };
 
-player.stop = function () {
-  _wavesurfer2.default.pause();
+player.toggle = function () {
+  _wavesurfer2.default.playPause();
 };
 
 player.extractSongObj = function () {
@@ -133,8 +134,6 @@ player.extractSongObj = function () {
 
   return song;
 };
-
-player.updateTrackInfo = function () {};
 
 exports.default = player;
 
@@ -146,23 +145,26 @@ module.exports = {
 	"firework": {
 		"name": "Firework",
 		"album": "Anatomy of the bear",
-		"lenght": "1:20",
+		"length": "1:20",
 		"url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/Fireworks.mp3",
-		"picture": "/images/firework.jpg"
+		"picture": "/images/firework.jpg",
+		"key": "firework"
 	},
 	"dawn": {
 		"name": "Dawn",
 		"album": "Awakening",
-		"lenght": "1:20",
+		"length": "1:20",
 		"url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/+Dawn.mp3",
-		"picture": "/images/dawn.jpg"
+		"picture": "/images/dawn.jpg",
+		"key": "dawn"
 	},
 	"pawinpaw": {
 		"name": "Paw in Paw",
 		"album": "Anatomy of the bear",
-		"lenght": "1:20",
+		"length": "1:20",
 		"url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/Paw+In+Paw.mp3",
-		"picture": "/images/pawinpaw.jpg"
+		"picture": "/images/pawinpaw.jpg",
+		"key": "pawinpaw"
 	}
 };
 
@@ -177,29 +179,16 @@ var _player = __webpack_require__(0);
 
 var _player2 = _interopRequireDefault(_player);
 
+var _ui = __webpack_require__(5);
+
+var _ui2 = _interopRequireDefault(_ui);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _player2.default.play();
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var playList = {};
-
-playList.songs = ["firework", "dawn", "pawinpaw"];
-
-playList.currentIndex = 0;
-
-exports.default = playList;
-
-/***/ }),
+/* 3 */,
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -229,7 +218,7 @@ var wavesurfer = WaveSurfer.create({
 });
 
 wavesurfer.on('ready', function () {
-  // wavesurfer.play();
+  wavesurfer.play();
 });
 
 wavesurfer.on('finish', function () {
@@ -237,6 +226,110 @@ wavesurfer.on('finish', function () {
 });
 
 exports.default = wavesurfer;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _player = __webpack_require__(0);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _wavesurfer = __webpack_require__(4);
+
+var _wavesurfer2 = _interopRequireDefault(_wavesurfer);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var playerButton = document.querySelector('#play');
+var playerBackButton = document.querySelector('#previous');
+var playerNextButton = document.querySelector('#next');
+var trackName = document.querySelector('.track-name');
+var trackAlbum = document.querySelector('.album-name');
+var trackLength = document.querySelector('.track-length');
+var trackImage = document.querySelector('.track-image');
+var playlist = document.querySelector('.songs-container');
+
+var ui = {
+
+  playerButtonIsPused: function playerButtonIsPused() {
+    playerButton.classList.remove('fa-play');
+    playerButton.classList.add('fa-pause');
+  },
+
+  playerButtonIsPlay: function playerButtonIsPlay() {
+    playerButton.classList.remove('fa-pause');
+    playerButton.classList.add('fa-play');
+  },
+
+  updatePlayList: function updatePlayList() {
+
+    ui.clearPlayList();
+
+    var song = _player2.default.extractSongObj();
+
+    ui.updateTrackInfo(song);
+
+    var elSong = document.querySelector("[data-song-key=" + song.key + "]").parentNode;
+
+    elSong.id = 'is-playing';
+  },
+
+  clearPlayList: function clearPlayList() {
+    if (document.getElementById('is-playing')) {
+      document.getElementById('is-playing').id = "";
+    }
+  },
+
+  updateTrackInfo: function updateTrackInfo(song) {
+    trackName.textContent = song.name;
+    trackAlbum.textContent = song.album;
+    trackLength.textContent = song.length;
+    trackImage.setAttribute('src', song.picture);
+  }
+};
+
+playerBackButton.addEventListener('click', function () {
+  _player2.default.back();
+});
+
+playerNextButton.addEventListener('click', function () {
+  _player2.default.next();
+});
+
+playerButton.addEventListener('click', function () {
+  _player2.default.toggle();
+});
+
+playlist.addEventListener('click', function (e) {
+  var target = e.target;
+
+  if (target.nodeName == 'BUTTON') {
+    var song = target.getAttribute('data-song-key');
+    _player2.default.playList.currentIndex = _player2.default.playList.songs.indexOf(song);
+
+    _player2.default.play();
+  }
+});
+
+_wavesurfer2.default.on('play', function () {
+  ui.playerButtonIsPused();
+  ui.updatePlayList();
+});
+
+_wavesurfer2.default.on('pause', function () {
+  ui.playerButtonIsPlay();
+  ui.clearPlayList();
+});
+
+exports.default = ui;
 
 /***/ })
 /******/ ]);
