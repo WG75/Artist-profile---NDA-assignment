@@ -12,12 +12,13 @@ const wavesurfer = WaveSurfer.create({
   hideScrollbar: true
 })
 
-wavesurfer.on('ready', () => {
-  wavesurfer.play();
-})
 
 wavesurfer.on('finish', () => {
   player.next();
+})
+
+wavesurfer.on('loading', () => {
+  console.log('loading');
 })
 
 

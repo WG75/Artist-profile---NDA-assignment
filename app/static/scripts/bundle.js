@@ -98,12 +98,20 @@ player.getCurrentLoadedSong = function () {
   return player.playList.songs[player.playList.currentIndex];
 };
 
-player.play = function () {
+player.load = function () {
 
   var song = player.extractSongObj();
   var songUrl = song.url;
 
   _wavesurfer2.default.load(songUrl);
+};
+
+player.play = function () {
+  player.load();
+
+  _wavesurfer2.default.on('ready', function () {
+    _wavesurfer2.default.play();
+  });
 };
 
 player.next = function () {
@@ -166,12 +174,12 @@ var wavesurfer = WaveSurfer.create({
   hideScrollbar: true
 });
 
-wavesurfer.on('ready', function () {
-  wavesurfer.play();
-});
-
 wavesurfer.on('finish', function () {
   _player2.default.next();
+});
+
+wavesurfer.on('loading', function () {
+  console.log('loading');
 });
 
 exports.default = wavesurfer;
@@ -353,7 +361,7 @@ var _ui2 = _interopRequireDefault(_ui);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_player2.default.play();
+_player2.default.load();
 
 /***/ })
 /******/ ]);

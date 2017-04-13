@@ -105,8 +105,7 @@ wavesurfer.on('play', () => {
   ui.playerButtonIsPused();
   ui.updatePlayList();
   ui.updateTrackDuration();
-
-
+  
 })
 
 wavesurfer.on('pause', () => {

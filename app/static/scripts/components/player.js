@@ -11,12 +11,22 @@ player.playList = {
 
 player.getCurrentLoadedSong = () => player.playList.songs[player.playList.currentIndex]
 
-player.play = () => {
+
+player.load = () => {
 
   let song = player.extractSongObj();
   let songUrl = song.url;
 
   waveSurfer.load(songUrl);
+
+}
+
+player.play = () => {
+  player.load();
+
+  waveSurfer.on('ready', () => {
+    waveSurfer.play()
+  })
 }
 
 player.next = () => {
