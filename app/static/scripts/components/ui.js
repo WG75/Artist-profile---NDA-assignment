@@ -9,6 +9,8 @@ const trackAlbum = document.querySelector('.album-name');
 const trackLength = document.querySelector('.track-length')
 const trackImage = document.querySelector('.track-image')
 const playlist = document.querySelector('.songs-container')
+const trackTime = document.querySelector('.countdown');
+
 
 const ui = {
 
@@ -46,9 +48,25 @@ const ui = {
     trackAlbum.textContent = song.album;
     trackLength.textContent = song.length;
     trackImage.setAttribute('src', song.picture);
+  },
+
+  updateTrackDuration: () => {
+    var currentTrackTime = parseInt(wavesurfer.getCurrentTime());
+    var trackDuration = parseInt(wavesurfer.getDuration());
+
+    var seconds = currentTrackTime % 60;
+
+    var minutes = parseInt(currentTrackTime / 60);
+
+    seconds = seconds > 10 ? seconds : "0" + seconds;
+
+    var time = minutes + ":" + seconds;
+
+    trackTime.textContent = time;
+
+    setTimeout(ui.updateTrackDuration, 1000);
   }
 };
-
 
 
 
@@ -69,9 +87,16 @@ playlist.addEventListener('click', (e) => {
 
   if(target.nodeName == 'BUTTON'){
     let song = target.getAttribute('data-song-key')
-    player.playList.currentIndex = player.playList.songs.indexOf(song);
 
-    player.play();
+    if(player.playList.currentIndex === player.playList.songs.indexOf(song) && wavesurfer.isPlaying()){
+      wavesurfer.pause()
+    }else{
+
+      player.playList.currentIndex = player.playList.songs.indexOf(song)
+
+      player.play();
+    }
+
   }
 })
 
@@ -79,6 +104,9 @@ playlist.addEventListener('click', (e) => {
 wavesurfer.on('play', () => {
   ui.playerButtonIsPused();
   ui.updatePlayList();
+  ui.updateTrackDuration();
+
+
 })
 
 wavesurfer.on('pause', () => {

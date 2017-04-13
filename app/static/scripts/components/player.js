@@ -32,7 +32,7 @@ player.next = () => {
 player.back = () => {
   player.playList.currentIndex--
   if(player.playList.currentIndex < 0) {
-    player.playList.currentIndex = player.playList.length - 1;
+    player.playList.currentIndex = player.playList.songs.length - 1;
   }
 
   player.play();

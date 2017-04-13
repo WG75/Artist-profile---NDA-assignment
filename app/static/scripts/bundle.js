@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -77,11 +77,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _wavesurfer = __webpack_require__(4);
+var _wavesurfer = __webpack_require__(1);
 
 var _wavesurfer2 = _interopRequireDefault(_wavesurfer);
 
-var _songs = __webpack_require__(1);
+var _songs = __webpack_require__(3);
 
 var _songs2 = _interopRequireDefault(_songs);
 
@@ -118,7 +118,7 @@ player.next = function () {
 player.back = function () {
   player.playList.currentIndex--;
   if (player.playList.currentIndex < 0) {
-    player.playList.currentIndex = player.playList.length - 1;
+    player.playList.currentIndex = player.playList.songs.length - 1;
   }
 
   player.play();
@@ -139,57 +139,6 @@ exports.default = player;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-module.exports = {
-	"firework": {
-		"name": "Firework",
-		"album": "Anatomy of the bear",
-		"length": "1:20",
-		"url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/Fireworks.mp3",
-		"picture": "/images/firework.jpg",
-		"key": "firework"
-	},
-	"dawn": {
-		"name": "Dawn",
-		"album": "Awakening",
-		"length": "1:20",
-		"url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/+Dawn.mp3",
-		"picture": "/images/dawn.jpg",
-		"key": "dawn"
-	},
-	"pawinpaw": {
-		"name": "Paw in Paw",
-		"album": "Anatomy of the bear",
-		"length": "1:20",
-		"url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/Paw+In+Paw.mp3",
-		"picture": "/images/pawinpaw.jpg",
-		"key": "pawinpaw"
-	}
-};
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _player = __webpack_require__(0);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _ui = __webpack_require__(5);
-
-var _ui2 = _interopRequireDefault(_ui);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-_player2.default.play();
-
-/***/ }),
-/* 3 */,
-/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -228,7 +177,7 @@ wavesurfer.on('finish', function () {
 exports.default = wavesurfer;
 
 /***/ }),
-/* 5 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -242,7 +191,7 @@ var _player = __webpack_require__(0);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _wavesurfer = __webpack_require__(4);
+var _wavesurfer = __webpack_require__(1);
 
 var _wavesurfer2 = _interopRequireDefault(_wavesurfer);
 
@@ -256,6 +205,7 @@ var trackAlbum = document.querySelector('.album-name');
 var trackLength = document.querySelector('.track-length');
 var trackImage = document.querySelector('.track-image');
 var playlist = document.querySelector('.songs-container');
+var trackTime = document.querySelector('.countdown');
 
 var ui = {
 
@@ -293,6 +243,23 @@ var ui = {
     trackAlbum.textContent = song.album;
     trackLength.textContent = song.length;
     trackImage.setAttribute('src', song.picture);
+  },
+
+  updateTrackDuration: function updateTrackDuration() {
+    var currentTrackTime = parseInt(_wavesurfer2.default.getCurrentTime());
+    var trackDuration = parseInt(_wavesurfer2.default.getDuration());
+
+    var seconds = currentTrackTime % 60;
+
+    var minutes = parseInt(currentTrackTime / 60);
+
+    seconds = seconds > 10 ? seconds : "0" + seconds;
+
+    var time = minutes + ":" + seconds;
+
+    trackTime.textContent = time;
+
+    setTimeout(ui.updateTrackDuration, 1000);
   }
 };
 
@@ -313,15 +280,22 @@ playlist.addEventListener('click', function (e) {
 
   if (target.nodeName == 'BUTTON') {
     var song = target.getAttribute('data-song-key');
-    _player2.default.playList.currentIndex = _player2.default.playList.songs.indexOf(song);
 
-    _player2.default.play();
+    if (_player2.default.playList.currentIndex === _player2.default.playList.songs.indexOf(song) && _wavesurfer2.default.isPlaying()) {
+      _wavesurfer2.default.pause();
+    } else {
+
+      _player2.default.playList.currentIndex = _player2.default.playList.songs.indexOf(song);
+
+      _player2.default.play();
+    }
   }
 });
 
 _wavesurfer2.default.on('play', function () {
   ui.playerButtonIsPused();
   ui.updatePlayList();
+  ui.updateTrackDuration();
 });
 
 _wavesurfer2.default.on('pause', function () {
@@ -330,6 +304,56 @@ _wavesurfer2.default.on('pause', function () {
 });
 
 exports.default = ui;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+module.exports = {
+	"firework": {
+		"name": "Firework",
+		"album": "Anatomy of the bear",
+		"length": "1:20",
+		"url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/Fireworks.mp3",
+		"picture": "/images/firework.jpg",
+		"key": "firework"
+	},
+	"dawn": {
+		"name": "Dawn",
+		"album": "Awakening",
+		"length": "1:16",
+		"url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/+Dawn.mp3",
+		"picture": "/images/dawn.jpg",
+		"key": "dawn"
+	},
+	"pawinpaw": {
+		"name": "Paw in Paw",
+		"album": "Anatomy of the bear",
+		"length": "1:36",
+		"url": "https://s3-us-west-1.amazonaws.com/music-noirdoor/Paw+In+Paw.mp3",
+		"picture": "/images/pawinpaw.jpg",
+		"key": "pawinpaw"
+	}
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _player = __webpack_require__(0);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _ui = __webpack_require__(2);
+
+var _ui2 = _interopRequireDefault(_ui);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_player2.default.play();
 
 /***/ })
 /******/ ]);
