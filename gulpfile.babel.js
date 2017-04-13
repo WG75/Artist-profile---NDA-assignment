@@ -1,15 +1,21 @@
-import gulp from 'gulp'
+ import gulp from 'gulp'
 import sass from 'gulp-sass'
 import uglifyCss from 'gulp-uglifycss'
 import plumber from 'gulp-plumber'
 import browserSync from 'browser-sync'
 import nodemon from 'gulp-nodemon'
+import imagemin from 'gulp-imagemin'
+import uglifycss from 'gulp-uglifycss'
 
+
+const Env =  !process.env.NODE_ENV ? 'app' : 'dist'
 
 const paths = {
   app: {
     css: './app/static/styles/style.sass',
-    img: './app/static/images/*'
+    img: './app/static/images/*',
+    views: './app/static/views/*'
+
   },
 
   dist: {
@@ -24,7 +30,8 @@ gulp.task('sass', () => {
   .pipe(sass({
     errLogToConsole: true
   }))
-  .pipe(gulp.dest('./app/static/styles'))
+  .pipe(uglifycss())
+  .pipe(gulp.dest(`./${Env}/static/styles`))
   .pipe(browserSync.stream())
 })
 
@@ -42,6 +49,27 @@ gulp.task('nodemon', () => {
   })
 })
 
+
+gulp.task('imagemin', () => {
+  gulp.src(paths.app.img)
+  .pipe(imagemin([
+    imagemin.jpegtran({
+      progressive: true
+    })
+  ]))
+  .pipe(gulp.dest(`./${Env}/static/images`))
+})
+
+
+gulp.task('ejs', () => {
+  gulp.src(paths.app.views)
+  .pipe(gulp.dest('./dist/static/views'))
+  gulp.src('./app/static/artist.ejs')
+  .pipe(gulp.dest('./dist/static/'))
+})
+
+
+gulp.task('build', ['sass', 'imagemin', 'ejs'])
 
 gulp.task('start', ['sass', 'browsersync'])
 
