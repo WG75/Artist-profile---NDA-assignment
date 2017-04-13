@@ -17,9 +17,5 @@ wavesurfer.on('finish', () => {
   player.next();
 })
 
-wavesurfer.on('loading', () => {
-  console.log('loading');
-})
-
 
 export default wavesurfer

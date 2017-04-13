@@ -178,10 +178,6 @@ wavesurfer.on('finish', function () {
   _player2.default.next();
 });
 
-wavesurfer.on('loading', function () {
-  console.log('loading');
-});
-
 exports.default = wavesurfer;
 
 /***/ }),
@@ -240,6 +236,21 @@ var ui = {
     elSong.id = 'is-playing';
   },
 
+  songIsLoading: function songIsLoading() {
+
+    var currentSong = _player2.default.getCurrentLoadedSong();
+    var btn = document.querySelector("[data-song-key=" + currentSong + "]");
+
+    btn.classList.add('fa-circle-o-notch', 'fa-spin');
+  },
+
+  songIsNotLoading: function songIsNotLoading() {
+    var currentSong = _player2.default.getCurrentLoadedSong();
+    var btn = document.querySelector("[data-song-key=" + currentSong + "]");
+
+    btn.classList.remove('fa-circle-o-notch', 'fa-spin');
+  },
+
   clearPlayList: function clearPlayList() {
     if (document.getElementById('is-playing')) {
       document.getElementById('is-playing').id = "";
@@ -256,13 +267,10 @@ var ui = {
   updateTrackDuration: function updateTrackDuration() {
     var currentTrackTime = parseInt(_wavesurfer2.default.getCurrentTime());
     var trackDuration = parseInt(_wavesurfer2.default.getDuration());
-
     var seconds = currentTrackTime % 60;
-
     var minutes = parseInt(currentTrackTime / 60);
 
     seconds = seconds > 10 ? seconds : "0" + seconds;
-
     var time = minutes + ":" + seconds;
 
     trackTime.textContent = time;
@@ -309,6 +317,14 @@ _wavesurfer2.default.on('play', function () {
 _wavesurfer2.default.on('pause', function () {
   ui.playerButtonIsPlay();
   ui.clearPlayList();
+});
+
+_wavesurfer2.default.on('loading', function () {
+  ui.songIsLoading();
+});
+
+_wavesurfer2.default.on('ready', function () {
+  ui.songIsNotLoading();
 });
 
 exports.default = ui;

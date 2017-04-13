@@ -24,9 +24,11 @@ player.load = () => {
 player.play = () => {
   player.load();
 
+
   waveSurfer.on('ready', () => {
     waveSurfer.play()
   })
+
 }
 
 player.next = () => {
