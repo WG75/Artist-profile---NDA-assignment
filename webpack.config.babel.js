@@ -1,14 +1,12 @@
 import path from 'path'
 
-const Env = !process.env.NODE_ENV ? 'app' : 'dist'
-
 
 module.exports = {
   entry: path.join(__dirname, 'app/static/scripts/app.js'),
 
   output: {
     filename: 'bundle.js',
-    path: path.join(__dirname, Env, 'static/scripts')
+    path: path.join(__dirname, 'dist/static/scripts')
   },
 
   watch: true,

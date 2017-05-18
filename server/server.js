@@ -24,7 +24,7 @@ server.register(plugins, (err) => {
 server.views({
   engines: {ejs},
   relativeTo: __dirname,
-  path: '../app/static/'
+  path: '../dist/static/'
 })
 
 

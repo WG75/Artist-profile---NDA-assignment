@@ -1,4 +1,4 @@
- import gulp from 'gulp'
+import gulp from 'gulp'
 import sass from 'gulp-sass'
 import uglifyCss from 'gulp-uglifycss'
 import plumber from 'gulp-plumber'
@@ -7,8 +7,6 @@ import nodemon from 'gulp-nodemon'
 import imagemin from 'gulp-imagemin'
 import uglifycss from 'gulp-uglifycss'
 
-
-const Env =  !process.env.NODE_ENV ? 'app' : 'dist'
 
 const paths = {
   app: {
@@ -31,7 +29,7 @@ gulp.task('sass', () => {
     errLogToConsole: true
   }))
   .pipe(uglifycss())
-  .pipe(gulp.dest(`./${Env}/static/styles`))
+  .pipe(gulp.dest(`./dist/static/styles`))
   .pipe(browserSync.stream())
 })
 
@@ -57,7 +55,7 @@ gulp.task('imagemin', () => {
       progressive: true
     })
   ]))
-  .pipe(gulp.dest(`./${Env}/static/images`))
+  .pipe(gulp.dest(`./dist/static/images`))
 })
 
 
@@ -71,10 +69,10 @@ gulp.task('ejs', () => {
 
 gulp.task('build', ['sass', 'imagemin', 'ejs'])
 
-gulp.task('start', ['sass', 'browsersync'])
-
-gulp.watch('app/static/**/*.sass', ['sass'])
-
-gulp.watch('app/**/*.+(ejs|js)', () => {
-  setTimeout(browserSync.reload, 1000)
+gulp.task('start', ['sass', 'browsersync'], () => {
+  gulp.watch('app/static/**/*.sass', ['sass'])
+  gulp.watch('app/static/**/*.ejs', ['ejs'])
+  gulp.watch('app/**/*.+(ejs|js)', () => {
+    setTimeout(browserSync.reload, 1000)
+  })
 })
